@@ -9,11 +9,24 @@
 </head>
 
 <body>
-    <form ref="uploadForm" action="http://localhost:3000/api/file/upload" method="post" encType="multipart/form-data">
+    <form ref="uploadForm" action="http://localhost:3000/api/file/upload" method="post" encType="multipart/form-data" target="_blank">
         <input type="file" name="key01" multiple/>
         <input type="file" name="key02" multiple/>
         <input type="file" name="key03" multiple/>
-        <input type="submit" value='Upload!' />
+        <button type="submit">Upload</button>
     </form>
+    <br>
+    <input id="txtFilePath" placeholder="Enter filePath" type="text"><button onclick="download()">Download File</button><button onclick="remove()">Remove File</button>
 </body>
+<script>
+    function download(){
+        const filePath = document.getElementById('txtFilePath').value;
+        window.open(`http://localhost:3000/api/file/download?filePath=${filePath}`);
+    }
+
+    function remove(){
+        const filePath = document.getElementById('txtFilePath').value;
+        window.open(`http://localhost:3000/api/file/delete?filePath=${filePath}`);
+    }
+</script>
 </html>

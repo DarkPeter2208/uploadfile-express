@@ -11,6 +11,7 @@ export class FileController {
             this._router = Router();
             this._router.post('/upload', this._instant.upload);
             this._router.get('/download', this._instant.download);
+            this._router.get('/delete', this._instant.delete);
         }
         return this._router;
     }
@@ -68,10 +69,19 @@ export class FileController {
 
     private download = (req: Request, res: Response) => {
         if (req.query.filePath) {
-            const file = process.cwd() + req.query.filePath;
-            if (!fs.existsSync(file)) res.status(404).send('FILE NOT FOUND');
-            else res.download(file); // Set disposition and send it.
+            const fullPath = this.root + req.query.filePath;
+            if (!fs.existsSync(fullPath)) res.status(404).send('FILE NOT FOUND');
+            else res.download(fullPath); // Set disposition and send it.
         } else res.status(404).send('FILE NOT FOUND');
+    }
+
+    private delete = (req: Request, res: Response) => {
+        const filePath = req.query.filePath || '';
+        if (filePath) {
+            const fullPath = this.root + filePath;
+            if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+        }
+        res.status(200).send('DELETE SUCCESSFUL');
     }
 
     private generateDirectory = (): string => {
